@@ -7,7 +7,7 @@ on:
     branches: [main]
 jobs:
   build:
-    name: Build latest release
+    name: Trivy Security Scan and update
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
