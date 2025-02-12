@@ -20,6 +20,13 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           trivy-config: trivy.yaml
+          output: 'trivy-results.sarif'
+      
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
         run: echo "High vulnerabilities found, triggering rebuild..."
