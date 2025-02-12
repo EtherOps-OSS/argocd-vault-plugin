@@ -13,15 +13,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ steps.get_latest.outputs.result }}
       
       - name: Check for vulnerabilities
         id: trivy-scan
         run: |
-          trivy image --severity HIGH --exit-code 1 ${{ steps.get_latest.outputs.result }} || echo "No high vulnerabilities found"
+          trivy fs --severity HIGH --exit-code 1 . || echo "No high vulnerabilities found"
 
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
