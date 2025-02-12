@@ -9,3 +9,9 @@ cover.out
 # Project workspaces
 .idea
 .vscode
+.cache
+
+# Trivy files
+.trivy/
+trivy-results.json
+trivy.db
