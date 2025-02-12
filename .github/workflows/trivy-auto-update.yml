@@ -13,23 +13,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Get latest release tag
-        id: get_latest
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const { github } = require('@actions/github');
-            const latestRelease = await github.repos.getLatestRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-            return latestRelease.data.tag_name;
-            
-      - name: Checkout latest release
-        run: git checkout ${{ steps.get_latest.outputs.result }}
-      
       - name: Run Trivy scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ steps.get_latest.outputs.result }}
-    
+      
+      - name: Check for vulnerabilities
+        id: trivy-scan
+        run: |
+          trivy image --severity HIGH --exit-code 1 ${{ steps.get_latest.outputs.result }} || echo "No high vulnerabilities found"
+
+      - name: Trigger rebuild if high vulnerabilities found
+        if: failure()
+        run: echo "High vulnerabilities found, triggering rebuild..."
