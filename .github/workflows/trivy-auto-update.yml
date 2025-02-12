@@ -5,6 +5,13 @@ on:
   #   - cron: '0 0 * * *'
   pull_request:
     branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  pull-request-target: write
+  security-events: write
+  
 jobs:
   build:
     name: Trivy Security Scan and update
@@ -20,7 +27,9 @@ jobs:
           scan-type: 'fs'
           scan-ref: '.'
           trivy-config: trivy.yaml
+          format: 'sarif'
           output: 'trivy-results.sarif'
+          exit-code: '1'
 
 
       - name: Upload Trivy scan results to GitHub Security tab
@@ -28,6 +37,34 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
+
+
+      - name: Create Pull Request
+        if: failure()
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'fix: security vulnerabilities found by Trivy'
+          title: 'Fix Security Vulnerabilities'
+          body: |
+            Automated PR to fix security vulnerabilities found by Trivy scan.
+            
+            ## Vulnerability Report
+            The full vulnerability report can be found in the GitHub Security tab.
+            
+            <details>
+            <summary>Detailed Scan Results</summary>
+            
+            
+            ${{ steps.trivy.outputs.sarif }}
+            
+            
+            </details>
+            
+            Please review the changes carefully before merging.
+          branch: fix/trivy-vulnerabilities
+          base: main
+          labels: security
 
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
