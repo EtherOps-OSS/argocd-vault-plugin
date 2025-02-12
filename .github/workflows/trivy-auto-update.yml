@@ -19,7 +19,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: '.'
-          # trivy-config: trivy.yaml
+          trivy-config: trivy.yaml
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
         run: echo "High vulnerabilities found, triggering rebuild..."
