@@ -14,11 +14,12 @@ jobs:
         uses: actions/checkout@v2
 
       
-      - name: Check for vulnerabilities
-        id: trivy-scan
-        run: |
-          trivy fs --severity HIGH --exit-code 1 . || echo "No high vulnerabilities found"
-
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          # trivy-config: trivy.yaml
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
         run: echo "High vulnerabilities found, triggering rebuild..."
