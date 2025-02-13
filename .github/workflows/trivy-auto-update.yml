@@ -53,7 +53,6 @@ jobs:
             The full vulnerability report can be found in the GitHub Security tab.
             <details>
             <summary>Detailed Scan Results</summary>
-            ${{ steps.trivy.outputs.sarif }}
 
             </details>
             Please review the changes carefully before merging.
@@ -68,7 +67,7 @@ jobs:
           repository: ${{ github.repository }}
           branch: ${{ github.head_ref }}
           pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
-          sarif-file: 'trivy-results.sarif'
+          sarif-file: ${{ steps.trivy.outputs.sarif-file }}
           dry-run: false
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
