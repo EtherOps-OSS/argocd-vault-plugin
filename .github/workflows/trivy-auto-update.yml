@@ -57,16 +57,3 @@ jobs:
           branch: fix/trivy-vulnerabilities
           base: main
           labels: security
-      - name: Post Trivy findings in the pull request
-        uses: sett-and-hive/sarif-to-comment-action@v2.0.1
-        if: failure() && steps.create-pr.outputs.pull-request-number
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          branch: ${{ github.head_ref }}
-          pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
-          sarif-file: ./trivy-results.sarif
-          dry-run: false
-      - name: Trigger rebuild if high vulnerabilities found
-        if: failure()
-        run: echo "High vulnerabilities found, triggering rebuild..."
