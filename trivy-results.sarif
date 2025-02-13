@@ -1,0 +1,350 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "fullName": "Trivy Vulnerability Scanner",
+          "informationUri": "https://github.com/aquasecurity/trivy",
+          "name": "Trivy",
+          "rules": [
+            {
+              "id": "GHSA-32gq-x56h-299c",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "age vulnerable to malicious plugin names, recipients, or identities causing arbitrary binary execution"
+              },
+              "fullDescription": {
+                "text": "A plugin name containing a path separator may allow an attacker to execute an arbitrary binary.\n\nSuch a plugin name can be provided to the age CLI through an attacker-controlled recipient or identity string, or to the [`plugin.NewIdentity`](https://pkg.go.dev/filippo.io/age/plugin#NewIdentity), [`plugin.NewIdentityWithoutData`](https://pkg.go.dev/filippo.io/age/plugin#NewIdentityWithoutData), or [`plugin.NewRecipient`](https://pkg.go.dev/filippo.io/age/plugin#NewRecipient) APIs.\n\nOn UNIX systems, a directory matching `${TMPDIR:-/tmp}/age-plugin-*` needs to exist for the attack to succeed.\n\nThe binary is executed with a single flag, either `--age-plugin=recipient-v1` or `--age-plugin=identity-v1`. The standard input includes the recipient or identity string, and the random file key (if encrypting) or the header of the file (if decrypting). The format is constrained by the [age-plugin](https://c2sp.org/age-plugin) protocol.\n\nAn equivalent issue was fixed by the [rage](https://github.com/str4d/rage) project, see advisory [GHSA-4fg7-vxc8-qx5w](https://github.com/str4d/rage/security/advisories/GHSA-4fg7-vxc8-qx5w).\n\nThanks to ⬡-49016 for reporting this."
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "helpUri": "https://github.com/advisories/GHSA-32gq-x56h-299c",
+              "help": {
+                "text": "Vulnerability GHSA-32gq-x56h-299c\nSeverity: MEDIUM\nPackage: filippo.io/age\nFixed Version: 1.2.1\nLink: [GHSA-32gq-x56h-299c](https://github.com/advisories/GHSA-32gq-x56h-299c)\nA plugin name containing a path separator may allow an attacker to execute an arbitrary binary.\n\nSuch a plugin name can be provided to the age CLI through an attacker-controlled recipient or identity string, or to the [`plugin.NewIdentity`](https://pkg.go.dev/filippo.io/age/plugin#NewIdentity), [`plugin.NewIdentityWithoutData`](https://pkg.go.dev/filippo.io/age/plugin#NewIdentityWithoutData), or [`plugin.NewRecipient`](https://pkg.go.dev/filippo.io/age/plugin#NewRecipient) APIs.\n\nOn UNIX systems, a directory matching `${TMPDIR:-/tmp}/age-plugin-*` needs to exist for the attack to succeed.\n\nThe binary is executed with a single flag, either `--age-plugin=recipient-v1` or `--age-plugin=identity-v1`. The standard input includes the recipient or identity string, and the random file key (if encrypting) or the header of the file (if decrypting). The format is constrained by the [age-plugin](https://c2sp.org/age-plugin) protocol.\n\nAn equivalent issue was fixed by the [rage](https://github.com/str4d/rage) project, see advisory [GHSA-4fg7-vxc8-qx5w](https://github.com/str4d/rage/security/advisories/GHSA-4fg7-vxc8-qx5w).\n\nThanks to ⬡-49016 for reporting this.",
+                "markdown": "**Vulnerability GHSA-32gq-x56h-299c**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|filippo.io/age|1.2.1|[GHSA-32gq-x56h-299c](https://github.com/advisories/GHSA-32gq-x56h-299c)|\n\nA plugin name containing a path separator may allow an attacker to execute an arbitrary binary.\n\nSuch a plugin name can be provided to the age CLI through an attacker-controlled recipient or identity string, or to the [`plugin.NewIdentity`](https://pkg.go.dev/filippo.io/age/plugin#NewIdentity), [`plugin.NewIdentityWithoutData`](https://pkg.go.dev/filippo.io/age/plugin#NewIdentityWithoutData), or [`plugin.NewRecipient`](https://pkg.go.dev/filippo.io/age/plugin#NewRecipient) APIs.\n\nOn UNIX systems, a directory matching `${TMPDIR:-/tmp}/age-plugin-*` needs to exist for the attack to succeed.\n\nThe binary is executed with a single flag, either `--age-plugin=recipient-v1` or `--age-plugin=identity-v1`. The standard input includes the recipient or identity string, and the random file key (if encrypting) or the header of the file (if decrypting). The format is constrained by the [age-plugin](https://c2sp.org/age-plugin) protocol.\n\nAn equivalent issue was fixed by the [rage](https://github.com/str4d/rage) project, see advisory [GHSA-4fg7-vxc8-qx5w](https://github.com/str4d/rage/security/advisories/GHSA-4fg7-vxc8-qx5w).\n\nThanks to ⬡-49016 for reporting this."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "5.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "MEDIUM"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-51744",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang-jwt: Bad documentation of error handling in ParseWithClaims can lead to potentially dangerous situations in golang-jwt"
+              },
+              "fullDescription": {
+                "text": "golang-jwt is a Go implementation of JSON Web Tokens. Unclear documentation of the error behavior in `ParseWithClaims` can lead to situation where users are potentially not checking errors in the way they should be. Especially, if a token is both expired and invalid, the errors returned by `ParseWithClaims` return both error codes. If users only check for the `jwt.ErrTokenExpired ` using `error.Is`, they will ignore the embedded `jwt.ErrTokenSignatureInvalid` and thus potentially accept invalid tokens. A fix has been back-ported with the error handling logic from the `v5` branch to the `v4` branch. In this logic, the `ParseWithClaims` function will immediately return in \u0026#34;dangerous\u0026#34; situations (e.g., an invalid signature), limiting the combined errors only to situations where the signature is valid, but further validation failed (e.g., if the signature is valid, but is expired AND has the wrong audience). This fix is part of the 4.5.1 release. We are aware that this changes the behaviour of an established function and is not 100 % backwards compatible, so updating to 4.5.1 might break your code. In case you cannot update to 4.5.0, please make sure that you are properly checking for all errors (\u0026#34;dangerous\u0026#34; ones first), so that you are not running in the case detailed above."
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-51744",
+              "help": {
+                "text": "Vulnerability CVE-2024-51744\nSeverity: LOW\nPackage: github.com/golang-jwt/jwt/v4\nFixed Version: 4.5.1\nLink: [CVE-2024-51744](https://avd.aquasec.com/nvd/cve-2024-51744)\ngolang-jwt is a Go implementation of JSON Web Tokens. Unclear documentation of the error behavior in `ParseWithClaims` can lead to situation where users are potentially not checking errors in the way they should be. Especially, if a token is both expired and invalid, the errors returned by `ParseWithClaims` return both error codes. If users only check for the `jwt.ErrTokenExpired ` using `error.Is`, they will ignore the embedded `jwt.ErrTokenSignatureInvalid` and thus potentially accept invalid tokens. A fix has been back-ported with the error handling logic from the `v5` branch to the `v4` branch. In this logic, the `ParseWithClaims` function will immediately return in \"dangerous\" situations (e.g., an invalid signature), limiting the combined errors only to situations where the signature is valid, but further validation failed (e.g., if the signature is valid, but is expired AND has the wrong audience). This fix is part of the 4.5.1 release. We are aware that this changes the behaviour of an established function and is not 100 % backwards compatible, so updating to 4.5.1 might break your code. In case you cannot update to 4.5.0, please make sure that you are properly checking for all errors (\"dangerous\" ones first), so that you are not running in the case detailed above.",
+                "markdown": "**Vulnerability CVE-2024-51744**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|LOW|github.com/golang-jwt/jwt/v4|4.5.1|[CVE-2024-51744](https://avd.aquasec.com/nvd/cve-2024-51744)|\n\ngolang-jwt is a Go implementation of JSON Web Tokens. Unclear documentation of the error behavior in `ParseWithClaims` can lead to situation where users are potentially not checking errors in the way they should be. Especially, if a token is both expired and invalid, the errors returned by `ParseWithClaims` return both error codes. If users only check for the `jwt.ErrTokenExpired ` using `error.Is`, they will ignore the embedded `jwt.ErrTokenSignatureInvalid` and thus potentially accept invalid tokens. A fix has been back-ported with the error handling logic from the `v5` branch to the `v4` branch. In this logic, the `ParseWithClaims` function will immediately return in \"dangerous\" situations (e.g., an invalid signature), limiting the combined errors only to situations where the signature is valid, but further validation failed (e.g., if the signature is valid, but is expired AND has the wrong audience). This fix is part of the 4.5.1 release. We are aware that this changes the behaviour of an established function and is not 100 % backwards compatible, so updating to 4.5.1 might break your code. In case you cannot update to 4.5.0, please make sure that you are properly checking for all errors (\"dangerous\" ones first), so that you are not running in the case detailed above."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "3.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "LOW"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-8185",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "hashicorp/vault: Vault Vulnerable to Denial of Service When Processing Raft Join Requests"
+              },
+              "fullDescription": {
+                "text": "Vault Community and Vault Enterprise (“Vault”) clusters using Vault’s Integrated Storage backend are vulnerable to a denial-of-service (DoS) attack through memory exhaustion through a Raft cluster join API endpoint . An attacker may send a large volume of requests to the endpoint which may cause Vault to consume excessive system memory resources, potentially leading to a crash of the underlying system and the Vault process itself.\n\nThis vulnerability, CVE-2024-8185, is fixed in Vault Community 1.18.1 and Vault Enterprise 1.18.1, 1.17.8, and 1.16.12."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-8185",
+              "help": {
+                "text": "Vulnerability CVE-2024-8185\nSeverity: HIGH\nPackage: github.com/hashicorp/vault\nFixed Version: 1.18.1\nLink: [CVE-2024-8185](https://avd.aquasec.com/nvd/cve-2024-8185)\nVault Community and Vault Enterprise (“Vault”) clusters using Vault’s Integrated Storage backend are vulnerable to a denial-of-service (DoS) attack through memory exhaustion through a Raft cluster join API endpoint . An attacker may send a large volume of requests to the endpoint which may cause Vault to consume excessive system memory resources, potentially leading to a crash of the underlying system and the Vault process itself.\n\nThis vulnerability, CVE-2024-8185, is fixed in Vault Community 1.18.1 and Vault Enterprise 1.18.1, 1.17.8, and 1.16.12.",
+                "markdown": "**Vulnerability CVE-2024-8185**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/hashicorp/vault|1.18.1|[CVE-2024-8185](https://avd.aquasec.com/nvd/cve-2024-8185)|\n\nVault Community and Vault Enterprise (“Vault”) clusters using Vault’s Integrated Storage backend are vulnerable to a denial-of-service (DoS) attack through memory exhaustion through a Raft cluster join API endpoint . An attacker may send a large volume of requests to the endpoint which may cause Vault to consume excessive system memory resources, potentially leading to a crash of the underlying system and the Vault process itself.\n\nThis vulnerability, CVE-2024-8185, is fixed in Vault Community 1.18.1 and Vault Enterprise 1.18.1, 1.17.8, and 1.16.12."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.5",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-9180",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "hashicorp/vault: Vault Operators in Root Namespace May Elevate Their Privileges"
+              },
+              "fullDescription": {
+                "text": "A privileged Vault operator with write permissions to the root namespace’s identity endpoint could escalate their own or another user’s privileges to Vault’s root policy. Fixed in Vault Community Edition 1.18.0 and Vault Enterprise 1.18.0, 1.17.7, 1.16.11, and 1.15.16."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-9180",
+              "help": {
+                "text": "Vulnerability CVE-2024-9180\nSeverity: HIGH\nPackage: github.com/hashicorp/vault\nFixed Version: 1.18.0\nLink: [CVE-2024-9180](https://avd.aquasec.com/nvd/cve-2024-9180)\nA privileged Vault operator with write permissions to the root namespace’s identity endpoint could escalate their own or another user’s privileges to Vault’s root policy. Fixed in Vault Community Edition 1.18.0 and Vault Enterprise 1.18.0, 1.17.7, 1.16.11, and 1.15.16.",
+                "markdown": "**Vulnerability CVE-2024-9180**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|github.com/hashicorp/vault|1.18.0|[CVE-2024-9180](https://avd.aquasec.com/nvd/cve-2024-9180)|\n\nA privileged Vault operator with write permissions to the root namespace’s identity endpoint could escalate their own or another user’s privileges to Vault’s root policy. Fixed in Vault Community Edition 1.18.0 and Vault Enterprise 1.18.0, 1.17.7, 1.16.11, and 1.15.16."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "7.2",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-45337",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/crypto/ssh: Misuse of ServerConfig.PublicKeyCallback may cause authorization bypass in golang.org/x/crypto"
+              },
+              "fullDescription": {
+                "text": "Applications and libraries which misuse the ServerConfig.PublicKeyCallback callback may be susceptible to an authorization bypass. The documentation for ServerConfig.PublicKeyCallback says that \u0026#34;A call to this function does not guarantee that the key offered is in fact used to authenticate.\u0026#34; Specifically, the SSH protocol allows clients to inquire about whether a public key is acceptable before proving control of the corresponding private key. PublicKeyCallback may be called with multiple keys, and the order in which the keys were provided cannot be used to infer which key the client successfully authenticated with, if any. Some applications, which store the key(s) passed to PublicKeyCallback (or derived information) and make security relevant determinations based on it once the connection is established, may make incorrect assumptions. For example, an attacker may send public keys A and B, and then authenticate with A. PublicKeyCallback would be called only twice, first with A and then with B. A vulnerable application may then make authorization decisions based on key B for which the attacker does not actually control the private key. Since this API is widely misused, as a partial mitigation golang.org/x/cry...@v0.31.0 enforces the property that, when successfully authenticating via public key, the last key passed to ServerConfig.PublicKeyCallback will be the key used to authenticate the connection. PublicKeyCallback will now be called multiple times with the same key, if necessary. Note that the client may still not control the last key passed to PublicKeyCallback if the connection is then authenticated with a different method, such as PasswordCallback, KeyboardInteractiveCallback, or NoClientAuth. Users should be using the Extensions field of the Permissions return value from the various authentication callbacks to record data associated with the authentication attempt instead of referencing external state. Once the connection is established the state corresponding to the successful authentication attempt can be retrieved via the ServerConn.Permissions field. Note that some third-party libraries misuse the Permissions type by sharing it across authentication attempts; users of third-party libraries should refer to the relevant projects for guidance."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-45337",
+              "help": {
+                "text": "Vulnerability CVE-2024-45337\nSeverity: CRITICAL\nPackage: golang.org/x/crypto\nFixed Version: 0.31.0\nLink: [CVE-2024-45337](https://avd.aquasec.com/nvd/cve-2024-45337)\nApplications and libraries which misuse the ServerConfig.PublicKeyCallback callback may be susceptible to an authorization bypass. The documentation for ServerConfig.PublicKeyCallback says that \"A call to this function does not guarantee that the key offered is in fact used to authenticate.\" Specifically, the SSH protocol allows clients to inquire about whether a public key is acceptable before proving control of the corresponding private key. PublicKeyCallback may be called with multiple keys, and the order in which the keys were provided cannot be used to infer which key the client successfully authenticated with, if any. Some applications, which store the key(s) passed to PublicKeyCallback (or derived information) and make security relevant determinations based on it once the connection is established, may make incorrect assumptions. For example, an attacker may send public keys A and B, and then authenticate with A. PublicKeyCallback would be called only twice, first with A and then with B. A vulnerable application may then make authorization decisions based on key B for which the attacker does not actually control the private key. Since this API is widely misused, as a partial mitigation golang.org/x/cry...@v0.31.0 enforces the property that, when successfully authenticating via public key, the last key passed to ServerConfig.PublicKeyCallback will be the key used to authenticate the connection. PublicKeyCallback will now be called multiple times with the same key, if necessary. Note that the client may still not control the last key passed to PublicKeyCallback if the connection is then authenticated with a different method, such as PasswordCallback, KeyboardInteractiveCallback, or NoClientAuth. Users should be using the Extensions field of the Permissions return value from the various authentication callbacks to record data associated with the authentication attempt instead of referencing external state. Once the connection is established the state corresponding to the successful authentication attempt can be retrieved via the ServerConn.Permissions field. Note that some third-party libraries misuse the Permissions type by sharing it across authentication attempts; users of third-party libraries should refer to the relevant projects for guidance.",
+                "markdown": "**Vulnerability CVE-2024-45337**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|CRITICAL|golang.org/x/crypto|0.31.0|[CVE-2024-45337](https://avd.aquasec.com/nvd/cve-2024-45337)|\n\nApplications and libraries which misuse the ServerConfig.PublicKeyCallback callback may be susceptible to an authorization bypass. The documentation for ServerConfig.PublicKeyCallback says that \"A call to this function does not guarantee that the key offered is in fact used to authenticate.\" Specifically, the SSH protocol allows clients to inquire about whether a public key is acceptable before proving control of the corresponding private key. PublicKeyCallback may be called with multiple keys, and the order in which the keys were provided cannot be used to infer which key the client successfully authenticated with, if any. Some applications, which store the key(s) passed to PublicKeyCallback (or derived information) and make security relevant determinations based on it once the connection is established, may make incorrect assumptions. For example, an attacker may send public keys A and B, and then authenticate with A. PublicKeyCallback would be called only twice, first with A and then with B. A vulnerable application may then make authorization decisions based on key B for which the attacker does not actually control the private key. Since this API is widely misused, as a partial mitigation golang.org/x/cry...@v0.31.0 enforces the property that, when successfully authenticating via public key, the last key passed to ServerConfig.PublicKeyCallback will be the key used to authenticate the connection. PublicKeyCallback will now be called multiple times with the same key, if necessary. Note that the client may still not control the last key passed to PublicKeyCallback if the connection is then authenticated with a different method, such as PasswordCallback, KeyboardInteractiveCallback, or NoClientAuth. Users should be using the Extensions field of the Permissions return value from the various authentication callbacks to record data associated with the authentication attempt instead of referencing external state. Once the connection is established the state corresponding to the successful authentication attempt can be retrieved via the ServerConn.Permissions field. Note that some third-party libraries misuse the Permissions type by sharing it across authentication attempts; users of third-party libraries should refer to the relevant projects for guidance."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "9.1",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "CRITICAL"
+                ]
+              }
+            },
+            {
+              "id": "CVE-2024-45338",
+              "name": "LanguageSpecificPackageVulnerability",
+              "shortDescription": {
+                "text": "golang.org/x/net/html: Non-linear parsing of case-insensitive content in golang.org/x/net/html"
+              },
+              "fullDescription": {
+                "text": "An attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service."
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://avd.aquasec.com/nvd/cve-2024-45338",
+              "help": {
+                "text": "Vulnerability CVE-2024-45338\nSeverity: HIGH\nPackage: golang.org/x/net\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)\nAn attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service.",
+                "markdown": "**Vulnerability CVE-2024-45338**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|HIGH|golang.org/x/net|0.33.0|[CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)|\n\nAn attacker can craft an input to the Parse functions that would be processed non-linearly with respect to its length, resulting in extremely slow parsing. This could cause a denial of service."
+              },
+              "properties": {
+                "precision": "very-high",
+                "security-severity": "8.0",
+                "tags": [
+                  "vulnerability",
+                  "security",
+                  "HIGH"
+                ]
+              }
+            }
+          ],
+          "version": "0.56.1"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "GHSA-32gq-x56h-299c",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Package: filippo.io/age\nInstalled Version: 1.0.0\nVulnerability GHSA-32gq-x56h-299c\nSeverity: MEDIUM\nFixed Version: 1.2.1\nLink: [GHSA-32gq-x56h-299c](https://github.com/advisories/GHSA-32gq-x56h-299c)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "go.mod: filippo.io/age@1.0.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-51744",
+          "ruleIndex": 1,
+          "level": "note",
+          "message": {
+            "text": "Package: github.com/golang-jwt/jwt/v4\nInstalled Version: 4.5.0\nVulnerability CVE-2024-51744\nSeverity: LOW\nFixed Version: 4.5.1\nLink: [CVE-2024-51744](https://avd.aquasec.com/nvd/cve-2024-51744)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "go.mod: github.com/golang-jwt/jwt/v4@4.5.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-8185",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/hashicorp/vault\nInstalled Version: 1.17.6\nVulnerability CVE-2024-8185\nSeverity: HIGH\nFixed Version: 1.18.1\nLink: [CVE-2024-8185](https://avd.aquasec.com/nvd/cve-2024-8185)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "go.mod: github.com/hashicorp/vault@1.17.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-9180",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "Package: github.com/hashicorp/vault\nInstalled Version: 1.17.6\nVulnerability CVE-2024-9180\nSeverity: HIGH\nFixed Version: 1.18.0\nLink: [CVE-2024-9180](https://avd.aquasec.com/nvd/cve-2024-9180)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "go.mod: github.com/hashicorp/vault@1.17.6"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-45337",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/crypto\nInstalled Version: 0.26.0\nVulnerability CVE-2024-45337\nSeverity: CRITICAL\nFixed Version: 0.31.0\nLink: [CVE-2024-45337](https://avd.aquasec.com/nvd/cve-2024-45337)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "go.mod: golang.org/x/crypto@0.26.0"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CVE-2024-45338",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "Package: golang.org/x/net\nInstalled Version: 0.28.0\nVulnerability CVE-2024-45338\nSeverity: HIGH\nFixed Version: 0.33.0\nLink: [CVE-2024-45338](https://avd.aquasec.com/nvd/cve-2024-45338)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod",
+                  "uriBaseId": "ROOTPATH"
+                },
+                "region": {
+                  "startLine": 1,
+                  "startColumn": 1,
+                  "endLine": 1,
+                  "endColumn": 1
+                }
+              },
+              "message": {
+                "text": "go.mod: golang.org/x/net@0.28.0"
+              }
+            }
+          ]
+        }
+      ],
+      "columnKind": "utf16CodeUnits",
+      "originalUriBaseIds": {
+        "ROOTPATH": {
+          "uri": "file:///home/runner/work/argocd-vault-plugin/argocd-vault-plugin/"
+        }
+      }
+    }
+  ]
+}
