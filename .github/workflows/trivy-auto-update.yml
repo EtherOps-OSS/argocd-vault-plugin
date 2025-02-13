@@ -28,7 +28,7 @@ jobs:
           scan-ref: '.'
           severity: "CRITICAL,HIGH"
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: ./trivy-results.sarif
           exit-code: '1'
 
 
@@ -39,7 +39,7 @@ jobs:
           sarif_file: 'trivy-results.sarif'
       - name: Print Sarif file
         if: success() || failure()
-        run: cat trivy-results.sarif
+        run: cat ./trivy-results.sarif
 
       - name: Create Pull Request
         if: failure()
@@ -65,7 +65,7 @@ jobs:
           repository: ${{ github.repository }}
           branch: ${{ github.head_ref }}
           pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
-          sarif-file: trivy-results.sarif
+          sarif-file: ./trivy-results.sarif
           dry-run: false
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
