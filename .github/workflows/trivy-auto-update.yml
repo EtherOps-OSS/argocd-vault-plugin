@@ -26,7 +26,7 @@ jobs:
         with:
           scan-type: 'fs'
           scan-ref: '.'
-          trivy-config: trivy.yaml
+          severity: "CRITICAL,HIGH"
           format: 'sarif'
           output: 'trivy-results.sarif'
           exit-code: '1'
@@ -50,11 +50,7 @@ jobs:
           body: |
             Automated PR to fix security vulnerabilities found by Trivy scan.
             ## Vulnerability Report
-            The full vulnerability report can be found in the GitHub Security tab.
-            <details>
-            <summary>Detailed Scan Results</summary>
-
-            </details>
+            The full vulnerability report can be found in the GitHub Security tab and in the comments of this pull request.
             Please review the changes carefully before merging.
           branch: fix/trivy-vulnerabilities
           base: main
