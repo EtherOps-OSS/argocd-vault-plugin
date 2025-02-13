@@ -63,7 +63,7 @@ jobs:
           repository: ${{ github.repository }}
           branch: ${{ github.head_ref }}
           pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
-          sarif-file: ${{ steps.trivy.outputs.sarif-file }}
+          sarif-file: ./trivy-results.sarif
           dry-run: false
       - name: Trigger rebuild if high vulnerabilities found
         if: failure()
