@@ -1,0 +1,36 @@
+name: "Trivy Security Scan"
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  build:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Trivy vulnerability scanner in fs mode
+        uses: aquasecurity/trivy-action@0.29.0
+        id: trivy
+        with:
+          trivy-config: trivy.yaml
+          scan-type: 'fs'
+          scan-ref: '.'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        if: success() || failure()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+#TODO: Find a way to have trivy scanning the version of go and update it if a critical or high vulnerability is found
