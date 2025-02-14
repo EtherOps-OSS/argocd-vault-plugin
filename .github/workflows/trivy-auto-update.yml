@@ -32,3 +32,5 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
+
+#TODO: Find a way to have trivy scanning the version of go and update it if a critical or high vulnerability is found
