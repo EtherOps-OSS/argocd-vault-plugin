@@ -19,17 +19,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      
+
       - name: Run Trivy vulnerability scanner in fs mode
         uses: aquasecurity/trivy-action@0.28.0
         id: trivy
         with:
+          trivy-config: trivy.yaml
           scan-type: 'fs'
           scan-ref: '.'
-          severity: "CRITICAL,HIGH"
-          format: 'sarif'
-          output: ./trivy-results.sarif
-          exit-code: '1'
 
 
       - name: Upload Trivy scan results to GitHub Security tab
